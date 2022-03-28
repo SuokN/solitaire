@@ -2,18 +2,17 @@ import {numberCards, suits, colors} from "./constants"
 import {cardParams} from "./orderCards"
 
 export const InitCards = () =>{
-    const cards = [];
+    //console.log("INIT CARD");
     const numCount = numberCards.length;
     const count = numCount * suits.length;
-    for (j = 0; j < count; ++j)
-    {
-        const index = Math.floor(j / numCount)
-        const card = new cardParams(
-            suits[index],
-            numberCards[j - index * numCount]
-        )
-        cards.push(card)
-    }
+    const cards = Array.from(Array(count), (item, j) => {
+            const index = Math.floor(j / numCount)
+            return new cardParams(
+                suits[index],
+                numberCards[j - index * numCount]
+            )
+        }
+    )
     return cards;
 }
 export const ShuffleIndexes = () =>

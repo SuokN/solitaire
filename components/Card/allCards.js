@@ -57,6 +57,7 @@ import _12S from '../../resources/cards/12S.svg'
 import _13S from '../../resources/cards/13S.svg'
 import _14S from '../../resources/cards/14S.svg'
 
+import {heightCard, widthCard} from "../../utils/constants";
 import {View} from "react-native";
 
 const CardView = (props) => {
@@ -123,6 +124,6 @@ const CardView = (props) => {
 
     const TagName = components[props.id];
    // console.log("TAG " + TagName + " " + props.id)
-    return <TagName width={100} height={150}></TagName>
+    return <TagName width={widthCard} height={heightCard}></TagName>
 }
 export default CardView;
