@@ -4,14 +4,14 @@ import CardView from "../Card/allCards";
 import {back, heightCard, widthCard} from "../../utils/constants"
 //import styles from "../card.style";
 const CardDeck = (props) => {
-    //console.log("CHILDREN " + JSON.stringify(props.children))
-   // console.log("CHILDREN " + props.children.length)
-    if (!!props.children) {
+    //console.log("items " + JSON.stringify(props.items))
+   // console.log("items " + props.items.length)
+    if (!!props.items) {
         return (
             <View style={styles.container}>
                 {
-                    props.children.length !== 0 ?
-                        props.children.map((child, index) => {
+                    props.items.length !== 0 ?
+                        props.items.map((child, index) => {
                                 return <TouchableOpacity style={styles.touch} key={index} onPress={props.onOpenCard}>
                                     <View key={index} style={styles.box}>
                                         <CardView key={index} id={back}></CardView>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
           height: heightCard,
      },
     box: {
-        zIndex: 1,
+       // zIndex: 1,
         width: widthCard,
         height: heightCard,
         backgroundColor: "blue",

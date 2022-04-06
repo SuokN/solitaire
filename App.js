@@ -253,12 +253,12 @@ const App = () => {
       <View style={styles.container} ref={dropContainerRef}
             onLayout={() => updateDropMeusere()}>
         <View style={styles.deckContainer}>
-          <CardDeck children={indexesCard} onOpenCard={onOpenCard}
+          <CardDeck items={indexesCard} onOpenCard={onOpenCard}
                     returnCards={returnCards}/>
-          <OpenDeck children={openCard} isDropZone={isDropZone} onAddCard={onAddCard}/>
+          <OpenDeck items={openCard} isDropZone={isDropZone} onAddCard={onAddCard}/>
           <View style={{width: 50}}/>
           {dropBases.map((dropRef, index) =>
-              <CardBase key={index} ref={dropRef} children={baseCard[index]}
+              <CardBase key={index} ref={dropRef} items={baseCard[index]}
                         isDropZone={isDropZone} onLayout={isDropZone.bind(this)}/>
           )}
           <Button  title="New game"
@@ -266,7 +266,7 @@ const App = () => {
         </View>
         <View style={styles.deckContainer}>
           {dropRefs.map((dropRef, index) =>
-              <DropDeck children={dropCard[index]} key={index} deckNum={index}
+              <DropDeck items={dropCard[index]} key={index} deckNum={index}
                         isDropZone={isDropZone} onAddCard={onAddCardFromDrop} ref={dropRef}
                         onLayout={isDropZone.bind(this)}/>
           )}

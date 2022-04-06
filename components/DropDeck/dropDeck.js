@@ -1,11 +1,11 @@
-import React, { forwardRef, ReactElement, useState } from "react";
-import { View, Text, StyleSheet, Dimensions,TouchableOpacity, Animated } from "react-native";
+import React, { forwardRef } from "react";
+import { View, StyleSheet } from "react-native";
 import Card from "../Card/card";
 import {useSelector} from "react-redux";
 import {heightCard, widthCard} from "../../utils/constants";
 
 const DropDeck = forwardRef((props, ref) => {
-    //console.log("CHILDREN DROP " + JSON.stringify(props.children))
+    //console.log("CHILDREN DROP " + JSON.stringify(props.items))
     const closedCards = useSelector(state => state.closed)
     const deckCards = useSelector(state => state.deck)
 
@@ -16,10 +16,10 @@ const DropDeck = forwardRef((props, ref) => {
         return  (closedCards.indexOf(id) === -1);
     }
 
-    if (!!props.children) {
+    if (!!props.items) {
         return (
             <View style={styles.container} ref={ref}>
-                {props.children.map((child, index) => {
+                {props.items.map((child, index) => {
                         return <Card key={index} isDropZone={props.isDropZone}
                                      onAddCard={props.onAddCard} deckNum={props.deckNum}
                                      id={child} shift={index} canMove={isSuit(child)}

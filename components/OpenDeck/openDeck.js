@@ -3,10 +3,10 @@ import Card from "../Card/card"
 import  styles from "../card.style"
 
 const OpenDeck = (props) => {
-    if (!!props.children) {
+    if (!!props.items) {
         return (
             <View style={styles.container}>
-                {props.children.map((child, index) => {
+                {props.items.map((child, index) => {
                         return <Card key={index} isDropZone={props.isDropZone}
                                      onAddCard={props.onAddCard} id={child}
                                      canMove={true}>
