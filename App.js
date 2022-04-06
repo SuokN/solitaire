@@ -9,97 +9,97 @@ import { isCanDropCard, isCanDropCardBase } from "./utils/orderCards"
 
 import { useDispatch, useSelector } from "react-redux";
 import {updateClosed} from "./actions/deck";
-import {shiftDelta, UPDATE_CLOSED_CARDS} from "./utils/constants";
+import {shiftDelta, deckLength, baseLength} from "./utils/constants";
 
 
 const App = () => {
   const dispatch = useDispatch()
   const dropContainerRef = useRef(null);
-  const dropRefs = [useRef(null), useRef(null),
-    useRef(null), useRef(null), useRef(null),
-    useRef(null), useRef(null)];
-  const dropBases = [useRef(null), useRef(null),
-    useRef(null), useRef(null)];
+  const dropRefs = Array.from(Array(deckLength), () => useRef(null));
+  const dropBases =  Array.from(Array(baseLength), () => useRef(null));
   const measureDrop = useRef([])
   const deckCard = useSelector(state => state.deck)
-  const [indexesCard, setIndexesCard] = useState(ShuffleIndexes());
+  const [indexesCard, setIndexesCard] = useState([])//ShuffleIndexes());
   const [openCard, setOpenCard] = useState([]);
-  const [dropCard, setDropCard] = useState(Array([], [], [], [], [], [], []));
-  const [baseCard, setBaseCard] = useState(Array([], [], [], []));
+  const [dropCard, setDropCard] = useState(Array.from(Array(deckLength), () => []));
+  const [baseCard, setBaseCard] = useState(Array.from(Array(baseLength), () => []));
   const closedCards = useSelector(state => state.closed);
 
-  function newGame(){
+  const newGame = () => {
+    //console.log("indexesCard " + indexesCard)
+    //setIndexesCard(ShuffleIndexes())
     setOpenCard([])
-    setBaseCard(Array([], [], [], []))
-    setIndexesCard(ShuffleIndexes())
-    setDropCard(Array([], [], [], [], [], [], []))
+    setBaseCard(Array.from(Array(baseLength), () => []))
+    //setDropCard(Array.from(Array(deckLength), () => []))
     initDropCards();
   }
 
   function updateDropMeusere() {
     //console.log('updateDropMeusere')
-    //console.log(dropCard)
     if (!!dropContainerRef.current) {
-      for (let i = 0; i < dropRefs.length; ++i) { // dropRefs.foreach
-        if (dropRefs[i].current) {
-          dropRefs[i].current.measureLayout(
+      dropRefs.forEach((item) => {
+        if (item.current) {
+          item.current.measureLayout(
               dropContainerRef.current,
               (left, top, width, height) => {
                 measureDrop.current.push({left, top, width, height});
                 isDropZone.bind(measureDrop.current);
-                //console.log(measureDrop.current)
-                //return { left, top, width, height };
-              });
+              })
         }
-      }
-      for (let i = 0; i < dropBases.length; ++i) { // dropBases.foreach
-        if (dropBases[i].current) {
-          dropBases[i].current.measureLayout(
+      })
+      dropBases.forEach((item) => {
+        if (item.current) {
+          item.current.measureLayout(
               dropContainerRef.current,
               (left, top, width, height) => {
                 measureDrop.current.push({left, top, width, height});
                 isDropZone.bind(measureDrop.current);
-                //console.log(measureDrop.current)
-                //return { left, top, width, height };
               });
         }
-      }
+      })
     }
   }
 
   const isDropZone = gesture => {
-    console.log("isDropZone ")
-    for (i = 0; i < measureDrop.current.length; ++i) { // measureDrop.find
-      if (measureDrop.current[i] == null) continue;
-      if (gesture.moveX > measureDrop.current[i].left &&
-          gesture.moveX < measureDrop.current[i].left + measureDrop.current[i].width) {
-        const drop = i > dropCard.length ? undefined : dropCard[i]
-        const heightDelta = (drop === undefined) ? 0 : dropCard[i].length * shiftDelta;
-        //console.log("isDropZone " +  measureDrop.current[i].height)
-        measureDrop.current[i].height += heightDelta
-        //console.log("isDropZone " +  measureDrop.current[i].height)
-        if (gesture.moveY > measureDrop.current[i].top &&
-            gesture.moveY < measureDrop.current[i].top + measureDrop.current[i].height)
-          return i;
-      }
-    }
-    return -1;
+    //console.log("isDropZone ")
+    const res = measureDrop.current.findIndex((item, i) => {
+      if (!!item)
+        if (gesture.moveX > item.left &&
+            gesture.moveX < item.left + item.width) {
+          const drop = i > dropCard.length ? undefined : dropCard[i]
+          const heightDelta = (drop === undefined) ? 0 : dropCard[i].length * shiftDelta;
+          measureDrop.current[i].height += heightDelta
+          //console.log("isDropZone " + i)
+          if (gesture.moveY > item.top &&
+              gesture.moveY < item.top + item.height)
+            return true;
+        }
+    })
+    return res;
   }
 
   function initDropCards() {
-    let adds = new Array(dropCard.length)  // Make const. Use transformation. Not mutations!!!
-    for(let i = 0; i < adds.length; ++i) {
-      i === 0 ? adds[i] = i : adds[i] = i + adds[i-1];
-     }
+
+    const length = dropCard.length;
+    const nums =  [...Array(length).keys()].map(i => i);
+    const adds = Array.from(Array(length), (item, i) =>
+      nums.slice(0, i+1).reduce( function(result, num) {
+        return result + num;
+      }, 0)
+    );
     //console.log(adds)
+    const shuffleCards = ShuffleIndexes();
     setDropCard(dropCard => dropCard.map((item, index) =>
-        indexesCard.slice(indexesCard.length - (index + 1) - adds[index], indexesCard.length - adds[index])));
+        shuffleCards.slice(shuffleCards.length - (index + 1) - adds[index], shuffleCards.length - adds[index])));
     const res = dropCard.map((item, index) =>
-        indexesCard.slice(indexesCard.length -(index + 1) - adds[index], indexesCard.length - adds[index] - 1))
+        shuffleCards.slice(shuffleCards.length -(index + 1) - adds[index], shuffleCards.length - adds[index] - 1))
    // console.log(res)
     dispatch(updateClosed(res.flat()));
-    const cards = indexesCard.slice(0, indexesCard.length - adds[adds.length-1] - adds[adds.length-2] - 1)
+    //console.log(indexesCard)
+    const cards = shuffleCards.slice(0, shuffleCards.length - res.flat().length - dropCard.length)
     setIndexesCard(cards);
+    //console.log(res)
+    //console.log(cards)
   }
 
   useEffect(() => initDropCards(), []);
@@ -114,7 +114,7 @@ const App = () => {
   }
 
   const onAddCard = (deckNum) => {
-    console.log("onAddCard ")
+    //console.log("onAddCard ")
     const opens = [...openCard]
     //console.log(opens)
     const child = opens.slice(opens.length - 1);

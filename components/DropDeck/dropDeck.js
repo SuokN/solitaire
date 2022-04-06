@@ -12,7 +12,7 @@ const DropDeck = forwardRef((props, ref) => {
     function isSuit(id) {
         //console.log("ISSUIT")
         //console.log("CARDS "+ + id + " "+ deckCards[id].suit + deckCards[id].value  + " "+ (closedCards.indexOf(id)))
-        console.log(closedCards)
+        //console.log(closedCards)
         return  (closedCards.indexOf(id) === -1);
     }
 
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center',
         flexWrap: 'nowrap',
-        zIndex: 3, // works on ios
-        elevation: 3
+        //zIndex: 3, // works on ios
+        //elevation: 3
     },
     touch: {
         position: 'absolute',

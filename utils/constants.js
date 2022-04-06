@@ -6,6 +6,8 @@ export const back = "_1B"
 export const shiftDelta = 20
 export const widthCard = 90
 export const heightCard = 120
+export const deckLength = 7
+export const baseLength = 4
 
 export const DECK_CARDS = 'DECK_CARDS'
 export const CLOSED_CARDS = 'CLOSED_CARDS'
